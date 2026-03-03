@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  isActive  Boolean  @default(true) @map("is_active")
+  isDeleted Boolean  @default(false) @map("is_delete")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}
+
+model Car {
+  id           Int          @id @default(autoincrement())
+  name         String
+  slug         String       @unique
+  description  String       @db.Text
+  basePrice    Float        @map("base_price")
+  category     String
+  range        Int
+  topSpeed     Int          @map("top_speed")
+  acceleration Float
+  variants     CarVariant[]
+  isActive     Boolean      @default(true) @map("is_active")
+  isDeleted    Boolean      @default(false) @map("is_delete")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  @@map("cars")
+}
+
+model CarVariant {
+  id            Int      @id @default(autoincrement())
+  carId         Int      @map("car_id")
+  car           Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  colorName     String   @map("color_name")
+  colorCode     String   @map("color_code")
+  imageUrl      String?  @map("image_url") // Legacy or primary image
+  images        Json?    // JSON array of strings for multiple variant images
+  priceModifier Float    @map("price_modifier")
+  isActive      Boolean  @default(true) @map("is_active")
+  isDeleted     Boolean  @default(false) @map("is_delete")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("car_variants")
+}
