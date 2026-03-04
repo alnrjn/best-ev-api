@@ -12,7 +12,6 @@ import uploadRoutes from "./modules/upload/upload.routes";
 const buildApp = async () => {
   const app = Fastify({ logger: true });
 
-  // Register Plugins
   await app.register(cors, {
     origin: "*", // allow NextJS
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -25,7 +24,6 @@ const buildApp = async () => {
     },
   });
 
-  // Serve uploads statically
   const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
   await app.register(fastifyStatic, {
@@ -33,7 +31,6 @@ const buildApp = async () => {
     prefix: "/api/v1/uploads/",
   });
 
-  // Create uploads dir if it doesn't exist
   const ensureUploadsDir = async () => {
     try {
       await fs.access(UPLOADS_DIR);
@@ -43,7 +40,6 @@ const buildApp = async () => {
   };
   await ensureUploadsDir();
 
-  // Register API Routes
   app.register(
     async function (apiRouter) {
       apiRouter.register(carRoutes);
