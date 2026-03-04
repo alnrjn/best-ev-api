@@ -21,10 +21,6 @@ yarn-error.log*
 /prisma/*.db
 /prisma/*.db-journal
 
-# Uploads
-public/uploads/*
-!public/uploads/.gitkeep
-
 # IDEs
 .vscode/
 .idea/
